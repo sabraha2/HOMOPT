@@ -42,23 +42,22 @@ from scipy.optimize import minimize
 from scipy.stats import uniform
 
 def objective_function(params):
+    # Load the digits dataset from sklearn
     X, y = load_digits(return_X_y=True)
+    # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
 
+    # Create and train the SVM model with parameters from SHADHO
     model = SVC(C=params['C'], kernel='rbf', gamma=params['gamma'])
     model.fit(X_train, y_train)
     predictions = model.predict(X_test)
+    
+    # Calculate the accuracy of the model
     accuracy = accuracy_score(y_test, predictions)
+    
+    # SHADHO minimizes the objective, so return negative accuracy as 'loss'
+    return {'loss': -accuracy}
 
-    return {'loss': -accuracy, 'status': 'ok'}
-
-search_space = {
-    'C': spaces.loguniform(lower=1e-3, upper=1e3),
-    'gamma': spaces.loguniform(lower=1e-4, upper=1e-1)
-}
-
-# Setup SHADHO with the HomOpt method
-shadho = Shadho('svm_optimization_task', objective_function, search_space)
 ```
 
 ### Configure and Run SHADHO with HomOpt
@@ -66,14 +65,19 @@ shadho = Shadho('svm_optimization_task', objective_function, search_space)
 The HomOpt method is used to optimize the SVM by navigating the hyperparameter space using the surrogate models created by GAM. Ensure to initialize the HomOpt method with appropriate settings for your optimization task.
 
 ```python
-from pyrameter.methods import hom
-
-# Initialize HomOpt method
-hom_method = hom(inner_method='random', k=0.5, iterations=5, jitter_strength=0.005, warm_up=20)
-
-# Configure SHADHO
-shadho.config_method(hom_method)
-shadho.run(timeout=3600)  # Run for 1 hour
+def configure_shadho():
+    # Setup the search space
+    search_space = setup_search_space()
+    
+    # Configure the HomOpt method
+    inner_method = random()
+    hom_method = HOM(inner_method=inner_method, k=0.5, iterations=5,
+                     jitter_strength=0.005, warm_up=20)
+    
+    # Set the HomOpt method in SHADHO
+    shadho = Shadho('svm', objective_function, search_space, method=hom_method, timeout=-1, max_tasks=100, await_pending=False)
+    
+    return shadho
 ```
 ## Execution
 Run the optimization by executing your Python script:
