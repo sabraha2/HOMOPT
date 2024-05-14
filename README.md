@@ -1,4 +1,5 @@
-# HomOpt Method with SHADHO Framework
+# HomOpt: A Flexible Homotopy-Based
+Hyperparameter Optimization Method
 
 ## Overview
 This README accompanies the our paper titled _HomOpt: A Flexible Homotopy-Based
