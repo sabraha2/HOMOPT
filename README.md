@@ -1,4 +1,4 @@
-# HomOpt Method with SHADHO Framework
+# HomOpt: A Flexible Homotopy-Based Hyperparameter Optimization Method
 
 ## Overview
 This README accompanies the our paper titled _HomOpt: A Flexible Homotopy-Based
@@ -85,7 +85,7 @@ Run the optimization by executing your Python script:
 ```python
 python svm_optimization_with_homopt.py
 ```
-This command starts the SHADHO framework and employs the `HomOpt` method, iterating through the hyperparameter space defined in the setup_search_space() method using a GAM surrogate to optimize the hyperparameters of an SVM model.
+This command starts the SHADHO framework and employs the `HomOpt` method, iterating through the hyperparameter space defined in the `setup_search_space()` method using a GAM surrogate to optimize the hyperparameters of an SVM model.
 
 ## Limitations and Future Work
 Currently, the `HomOpt` method in SHADHO supports only the GAM surrogate model. Plans to expand the range of surrogate models include integrating polynomial regression models and other ensemble methods, which would provide a more robust framework capable of handling a broader range of optimization tasks.
